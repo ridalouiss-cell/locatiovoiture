@@ -61,76 +61,61 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Fleet carousel
 document.addEventListener('DOMContentLoaded', () => {
-  const cars = [
+  // The six cars the agency wants on the home page, in this order. Each id is
+  // the Supabase UUID so a card links straight to its detail page. These
+  // entries are the first paint; loadHomeCars() below refreshes name, price
+  // and photo from Supabase and drops any car that left the fleet.
+  const HOME_CAR_NAMES = [
+    'Porsche Macan',
+    'Audi Q3 2026',
+    'Volkswagen Golf 8.5 2026',
+    'Opel Corsa',
+    'Renault Clio 5 2025',
+    'Dacia Logan',
+  ];
+
+  let cars = [
     {
-      id: 2,
-      name: { ar: 'داسيا سانديرو', fr: 'Dacia Sandero', en: 'Dacia Sandero' },
-      cat: { ar: 'اقتصادية', fr: 'Économique', en: 'Economy' },
-      catKey: 'Economy', price: '320', doors: 4, passengers: 5,
-      img: 'assets/images/cars/sandero.webp'
+      id: '4f0ad7fd-42f7-4273-a7f4-3461a14ae378',
+      name: { ar: 'بورش ماكان', fr: 'Porsche Macan', en: 'Porsche Macan' },
+      cat: { ar: 'فاخرة', fr: 'Luxe', en: 'Luxury' },
+      catKey: 'Luxury', price: '2500', doors: 4, passengers: 5,
+      img: 'assets/images/cars/porsche-macan.webp'
     },
     {
-      id: 4,
-      name: { ar: 'رونو كليو 5', fr: 'Renault Clio 5', en: 'Renault Clio 5' },
-      cat: { ar: 'سيدان', fr: 'Berline', en: 'Sedan' },
-      catKey: 'Sedan', price: '420', doors: 4, passengers: 5,
+      id: 'a87a5971-e5b6-4522-aca8-ecd3f7933e31',
+      name: { ar: 'أودي Q3 2026', fr: 'Audi Q3 2026', en: 'Audi Q3 2026' },
+      cat: { ar: 'دفع رباعي', fr: 'SUV', en: 'SUV' },
+      catKey: 'SUV', price: '1500', doors: 4, passengers: 5,
+      img: 'assets/images/cars/audi-q3.webp'
+    },
+    {
+      id: '0171cc19-cf0f-47f4-b6fd-d736cea5dfa6',
+      name: { ar: 'فولكسفاغن غولف 8.5 2026', fr: 'Volkswagen Golf 8.5 2026', en: 'Volkswagen Golf 8.5 2026' },
+      cat: { ar: 'مريحة', fr: 'Confort', en: 'Comfort' },
+      catKey: 'Sedan', price: '900', doors: 4, passengers: 5,
+      img: 'assets/images/cars/vw-golf-85.webp'
+    },
+    {
+      id: '31eb924f-6b66-40c4-8169-833075aef019',
+      name: { ar: 'أوبل كورسا', fr: 'Opel Corsa', en: 'Opel Corsa' },
+      cat: { ar: 'اقتصادية', fr: 'Économique', en: 'Economy' },
+      catKey: 'Economy', price: '350', doors: 4, passengers: 5,
+      img: 'assets/images/cars/opel-corsa.webp'
+    },
+    {
+      id: '2b8cb2a6-f0a1-41f0-b95d-76291bc3d9d4',
+      name: { ar: 'رونو كليو 5 2025', fr: 'Renault Clio 5 2025', en: 'Renault Clio 5 2025' },
+      cat: { ar: 'اقتصادية', fr: 'Économique', en: 'Economy' },
+      catKey: 'Economy', price: '350', doors: 4, passengers: 5,
       img: 'assets/images/cars/clio5.webp'
     },
     {
-      id: 7,
-      name: { ar: 'فولكسفاغن تي روك', fr: 'Volkswagen T-Roc', en: 'Volkswagen T-Roc' },
-      cat: { ar: 'دفع رباعي', fr: 'SUV', en: 'SUV' },
-      catKey: 'SUV', price: '550', doors: 4, passengers: 5,
-      img: 'assets/images/cars/troc.webp'
-    },
-    {
-      id: 5,
-      name: { ar: 'بيجو 208', fr: 'Peugeot 208', en: 'Peugeot 208' },
-      cat: { ar: 'سيدان', fr: 'Berline', en: 'Sedan' },
-      catKey: 'Sedan', price: '450', doors: 4, passengers: 5,
-      img: 'assets/images/cars/p208.webp'
-    },
-    {
-      id: 11,
-      name: { ar: 'هيونداي i20', fr: 'Hyundai i20', en: 'Hyundai i20' },
+      id: '0085fc15-dfb2-4fbc-bbcc-0968af901200',
+      name: { ar: 'داسيا لوغان', fr: 'Dacia Logan', en: 'Dacia Logan' },
       cat: { ar: 'اقتصادية', fr: 'Économique', en: 'Economy' },
       catKey: 'Economy', price: '300', doors: 4, passengers: 5,
-      img: 'assets/images/cars/i20.webp'
-    },
-    {
-      id: 12,
-      name: { ar: 'سكودا أوكتافيا', fr: 'Skoda Octavia', en: 'Skoda Octavia' },
-      cat: { ar: 'سيدان', fr: 'Berline', en: 'Sedan' },
-      catKey: 'Sedan', price: '500', doors: 4, passengers: 5,
-      img: 'assets/images/cars/skoda-octavia.webp'
-    },
-    {
-      id: 13,
-      name: { ar: 'سيات إيبيزا', fr: 'Seat Ibiza', en: 'Seat Ibiza' },
-      cat: { ar: 'اقتصادية', fr: 'Économique', en: 'Economy' },
-      catKey: 'Economy', price: '350', doors: 4, passengers: 5,
-      img: 'assets/images/cars/seat-ibiza.webp'
-    },
-    {
-      id: 14,
-      name: { ar: 'تويوتا يارِس', fr: 'Toyota Yaris', en: 'Toyota Yaris' },
-      cat: { ar: 'اقتصادية', fr: 'Économique', en: 'Economy' },
-      catKey: 'Economy', price: '330', doors: 4, passengers: 5,
-      img: 'assets/images/cars/toyota-yaris.webp'
-    },
-    {
-      id: 15,
-      name: { ar: 'كيا سبورتاج', fr: 'Kia Sportage', en: 'Kia Sportage' },
-      cat: { ar: 'دفع رباعي', fr: 'SUV', en: 'SUV' },
-      catKey: 'SUV', price: '700', doors: 4, passengers: 5,
-      img: 'assets/images/cars/kia-sportage.webp'
-    },
-    {
-      id: 16,
-      name: { ar: 'داسيا داستر', fr: 'Dacia Duster', en: 'Dacia Duster' },
-      cat: { ar: 'دفع رباعي', fr: 'SUV', en: 'SUV' },
-      catKey: 'SUV', price: '600', doors: 4, passengers: 5,
-      img: 'assets/images/cars/duster.webp'
+      img: 'assets/images/cars/dacia-logan.webp'
     },
   ];
 
@@ -233,6 +218,50 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   renderFleetCards();
+
+  // Refresh the six home-page cards from Supabase, so a price, a photo or a
+  // name edited in the dashboard shows here without touching this file. The
+  // hard-coded list above stays on screen if the load fails, and a car that
+  // is no longer in the fleet is dropped rather than advertised.
+  async function loadHomeCars() {
+    if (!window.BooklyDB || typeof window.BooklyDB.getCars !== 'function') return;
+    let rows;
+    try {
+      rows = await window.BooklyDB.getCars(window.BESTORE_AGENCY_ID);
+    } catch (e) {
+      console.warn('[AYM] home fleet: Supabase load failed, keeping the static list.', e);
+      return;
+    }
+    if (!Array.isArray(rows) || !rows.length) return;
+
+    const byName = {};
+    rows.forEach(r => { if (r && r.name) byName[r.name] = r; });
+
+    const fresh = [];
+    HOME_CAR_NAMES.forEach(name => {
+      const row = byName[name];
+      if (!row) return;                                  // left the fleet
+      const old = cars.filter(c => c.name.fr === name)[0];
+      fresh.push({
+        id: row.id,
+        name: old ? old.name : { ar: row.name, fr: row.name, en: row.name },
+        cat: old ? old.cat : { ar: row.category, fr: row.category, en: row.category },
+        catKey: old ? old.catKey : 'Economy',
+        price: String(row.price_per_day),
+        doors: old ? old.doors : 4,
+        passengers: old ? old.passengers : 5,
+        img: row.photo_url || (old ? old.img : fallbackImg),
+      });
+    });
+
+    if (!fresh.length) return;                           // nothing matched, keep what is shown
+    cars = fresh;
+    renderFleetCards();
+  }
+
+  // BooklyDB is loaded after this file, so wait for the page to settle.
+  if (document.readyState === 'complete') loadHomeCars();
+  else window.addEventListener('load', loadHomeCars);
 
   prevBtn.addEventListener('click', () => goTo(current - 1));
   nextBtn.addEventListener('click', () => goTo(current + 1));
