@@ -119,7 +119,7 @@
     },
     'bmw-serie-1': {
       ref: 32,
-      hero:  'assets/images/34/bmw-serie-1.webp',
+      // No rear shot: the agency dropped it, so the gallery shows front + side.
       front: 'assets/images/cars/bmw-serie-1.webp',
       side:  'assets/images/side view/bmw-serie-1.webp'
     },
