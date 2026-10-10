@@ -1062,7 +1062,7 @@ tbody tr:hover{background:#FAFAFA;transition:background .12s ease}
           <div class="fleet-tabs" id="fleetTabs">
             <button class="fleet-tab active" data-fs="all">Tous <span class="ftab-count" id="fcount-all">0</span></button>
             <button class="fleet-tab" data-fs="available"><span class="fdot fdot-green"></span>Disponible <span class="ftab-count c-green" id="fcount-available">0</span></button>
-            <button class="fleet-tab" data-fs="rented"><span class="fdot fdot-amber"></span>En location <span class="ftab-count c-amber" id="fcount-rented">0</span></button>
+            <button class="fleet-tab" data-fs="rented" style="display:none"><span class="fdot fdot-amber"></span>En location <span class="ftab-count c-amber" id="fcount-rented">0</span></button>
             <button class="fleet-tab" data-fs="maintenance"><span class="fdot fdot-red"></span>Maintenance <span class="ftab-count c-red" id="fcount-maintenance">0</span></button>
           </div>
           <div class="fleet-controls">
@@ -1294,7 +1294,6 @@ tbody tr:hover{background:#FAFAFA;transition:background .12s ease}
           </select></div>
           <div class="field"><label>Statut</label><select id="ec-status">
             <option value="available">Disponible</option>
-            <option value="rented">En location</option>
             <option value="maintenance">Maintenance</option>
           </select></div>
           <div class="field"><label>Prix par jour (MAD)</label><input type="number" id="ec-price" min="0" required></div>
@@ -1670,7 +1669,8 @@ async function reloadData(){
   if(BooklyDB.getContracts)await loadContracts();
   /* display status: maintenance is kept; otherwise rented when a booking is in progress */
   /* le statut vient de la fiche voiture : l'agence le change elle-même */
-  CARS.forEach(c=>{ if(!c.status)c.status='available'; });
+  // The agency wants cars always shown as available, never "en location".
+  CARS.forEach(c=>{ if(!c.status||c.status==='rented')c.status='available'; });
 }
 
 /* ════════ LOGIN - Supabase Auth (with demo-password fallback) ════════ */
@@ -2300,8 +2300,7 @@ function carTodo(c){
 }
 function fleetCardHTML(c){
     const todo=carTodo(c);
-    const active=BOOKINGS.find(b=>b.carId===c.id&&b.status==='inprogress');
-    const rentInfo=active?`<div class="car-card__rent">Loué à <b>${active.client}</b> · retour le <b>${fmtFR(active.return)}</b></div>`:'';
+    const rentInfo='';
     // mini-cal next 14 days
     const cal=[];
     for(let i=0;i<14;i++){
@@ -2332,7 +2331,6 @@ function fleetCardHTML(c){
           <span>Disponibilité</span>
           <select onchange="setCarStatus('${c.id}',this.value)" aria-label="Disponibilité de ${c.name}">
             <option value="available"${c.status==='available'?' selected':''}>Disponible</option>
-            <option value="rented"${c.status==='rented'?' selected':''}>En location</option>
             <option value="maintenance"${c.status==='maintenance'?' selected':''}>Maintenance</option>
           </select>
         </div>

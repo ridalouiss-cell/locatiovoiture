@@ -186,9 +186,6 @@
           source: 'dashboard',
         }).select().single();
         if (res.error) throw res.error;
-        if (d.pickup_date === todayISO() && d.car_id) {
-          await sb.from('cars').update({ status: 'rented' }).eq('id', d.car_id);
-        }
         return res.data;
       },
 
