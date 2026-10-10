@@ -2781,7 +2781,7 @@ function renderContracts(){
       <td>${fmtFR(b.pickup)} → ${fmtFR(b.return)}</td>
       <td>${b.source==='website'?'Site web':'Agence'}</td>
       <td>${badge(b.status)}</td>
-      <td><div class="ct-actions"><button class="btn btn-ghost" style="padding:7px 13px" onclick="openContract('${b.id}')">Créer le contrat</button></div></td>
+      <td><div class="ct-actions">${b.status==='pending'?`<button class="btn btn-primary" style="padding:7px 13px" onclick="confirmBooking('${b.id}')">Confirmer la réservation</button>`:''}<button class="btn btn-ghost" style="padding:7px 13px" onclick="openContract('${b.id}')">Créer le contrat</button></div></td>
     </tr>`).join(''):`<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:22px">Toutes les réservations actives ont un contrat.</td></tr>`;
 }
 $('#ctSearch').addEventListener('input',e=>{ctQuery=e.target.value;renderContracts();});
