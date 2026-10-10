@@ -7,7 +7,7 @@
    exactly as before. */
 window.SUPABASE_CONFIG = {
   url: 'https://wyvdwidioiixczjmiaez.supabase.co',
-  anonKey: 'sb_publishable_uEQ2K1BwZS1LL3gWjrTEZQ_tYz1Hbr-',
+  anonKey: 'sb_publishable_njlmdQfKZWRQ1zj9DZBKQw_QCHteN2D',
 };
 
 /* AYM Rent Car's agency id - must match AGENCY_ID in seed.js. */
